@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-dr_student_information_clean_to_process <- function(district,period) {
+clean_to_process_dr_student_information <- function(district,period) {
 
   writeLines("--Calling Student Information Clean to Process--")
 
@@ -110,7 +110,7 @@ dr_student_information_clean_to_process <- function(district,period) {
       district = district,
       period = period,
       location = staticValues$locations$egnyte_process,
-      file = staticValues$data_elements$student_information
+      file = staticValues$data_elements$dr_student_information
     )
 
   saveOrArchive(student_information_final,egnyte_output_file)

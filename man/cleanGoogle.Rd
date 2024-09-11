@@ -4,7 +4,7 @@
 \alias{cleanGoogle}
 \title{Title}
 \usage{
-cleanGoogle(googleSheetExtract)
+cleanGoogle(google_url)
 }
 \arguments{
 \item{googleSheetExtract}{}
