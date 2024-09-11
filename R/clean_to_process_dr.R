@@ -7,7 +7,9 @@ clean_to_process_dr <- function(district,period){
   # survey_clean_to_process() - two branches - 1st is wide and 2nd is long
 
   ## wrapper - if file is wide (taken from what's written to G Drive), call appropriate fxn below
-  if(raw_file_xwalk$CORE_Value == "dr_panorama_wide_survey"){
+  if (raw_file_xwalk$CORE_Value == "dr_student_information"){
+    clean_to_process_dr_student_information(district,period,raw_file_xwalk)
+    else if (raw_file_xwalk$CORE_Value == "dr_panorama_wide_survey"){
     clean_to_process_dr_panorama_wide(district,period,raw_file_xwalk)
   } else if(raw_file_xwalk$CORE_Value == "dr_panorama_long_survey"){
     clean_to_process_dr_panorama_long(district,period,raw_file_xwalk)
@@ -15,5 +17,6 @@ clean_to_process_dr <- function(district,period){
     clean_to_process_dr_lausd(district,period,raw_file_xwalk)
   } else {
     clean_to_process_dr_google_forms(district,period,raw_file_xwalk)
+    }
   }
 }
