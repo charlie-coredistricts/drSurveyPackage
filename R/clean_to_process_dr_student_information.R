@@ -52,7 +52,8 @@ clean_to_process_dr_student_information <- function(district,period) {
 
   # Can remove the following 3 if statements when we can remove the columns from the enumerations
 
-  final_required_columns <- c("ssid",
+  final_required_columns <- c("cds",
+                              "ssid",
                               "local_id",
                               "student_last_name",
                               "student_first_name",
@@ -82,6 +83,7 @@ clean_to_process_dr_student_information <- function(district,period) {
   student_information_final <- stu_info_audit %>%
     filter(duplicate_record == F) %>%
     select(
+      cds,
       ssid,
       local_id,
       student_last_name,
