@@ -19,11 +19,6 @@ clean_to_process_dr_student_information <- function(district,period) {
     file_type = staticValues$clean_files$dr_student_information
   )
 
-  if ("cds" %in% names(stu_info_audit)){
-    stu_info_audit <- stu_info_audit %>%
-      select(-cds)
-  }
-
   if ("school_name" %in% names(stu_info_audit)){
     stu_info_audit <- stu_info_audit %>%
       select(-school_name)
