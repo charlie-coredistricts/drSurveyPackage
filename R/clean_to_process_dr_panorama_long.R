@@ -63,6 +63,27 @@ clean_to_process_dr_panorama_long <- function(district,period,raw_file_xwalk) {
     print("formatted:")
     print(dr_panorama_long_formatted)
 
+    ################ TO DO: clean 06_roster_panorama to work here ################
+    lbusd_surveyed <- pano_all %>%
+      filter(district_name == "Long Beach Unified") %>%
+      select(respondent_sis_id_value,school_names,submission_time)
+
+    sausd_surveyed <- pano_all %>%
+      filter(district_name == "Santa Ana Unified") %>%
+      select(respondent_sis_id_value,school_names,submission_time)
+
+    # already updated for Fall 2024
+    lbusd_sheet <- 'https://docs.google.com/spreadsheets/d/1lEbvTCZqruNCy53jufvM6q1-Owf3UUM14XArZeM_Lmw/edit?usp=sharing'
+
+    sausd_sheet <- 'https://docs.google.com/spreadsheets/d/1B4cPN50ozlyvw2Vd9N16fcseuqeozzmZhhz3XCXFmls/edit?usp=sharing'
+
+
+    range_write(lbusd_sheet,lbusd_surveyed,col_names = FALSE,range = "a2")
+    # write.csv(lbusd_surveyed,paste(path_to_save_directory,"/00_raw/02_clean_panorama/lbusd_surveyed.csv",sep=""))
+
+    range_write(sausd_sheet,sausd_surveyed,col_names = FALSE,range = "a2")
+
+    ################################################################################
 
     dr_panorama_long_df_process_path <- universal_file_path_helper(
       district = district,

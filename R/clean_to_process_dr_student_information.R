@@ -24,7 +24,10 @@ clean_to_process_dr_student_information <- function(district,period) {
       select(-school_name)
   }
 
-
+  if ("grade" %in% names(stu_info_audit)){
+    stu_info_audit <- stu_info_audit %>%
+      filter(grade %in% c("9","09"))
+  }
 
   if("hispanic_indicator" %in% names(stu_info_audit)){
     if("Y" %in% (unique(stu_info_audit$hispanic_indicator))){
