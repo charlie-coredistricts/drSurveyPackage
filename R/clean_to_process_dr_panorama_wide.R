@@ -11,21 +11,23 @@ clean_to_process_dr_panorama_wide <- function(district,period,raw_file_xwalk) {
       file_type = staticValues$clean_files$dr_panorama_wide_survey
     )
 
-    print(dr_panorama_wide_df)
-
-    # clean here
-
+    # names(dr_panorama_wide_df)
+    # print(dr_panorama_wide_df)
 
     ################ TO DO: clean 06_roster_panorama to work here ################
-    fusd_surveyed <- fresno_conformed %>%
-      filter(district_name_survey == "Fresno Unified") %>%
-      select(student_id_number_survey,school_name_survey,timestamp_utc)
+    dr_panorama_wide_df <- dr_panorama_wide_df %>%
+      mutate(timestamp_utc = gsubfn('.',list('T' = ' '), timestamp_utc),
+             timestamp_utc = str_remove_all(timestamp_utc, "\\+00:00")) %>%
+      filter(timestamp_utc >= staticValues$survey_window$start)
 
-    # already updated for Fall 2024
-    fusd_sheet <- 'https://docs.google.com/spreadsheets/d/1c-SusPB4I56Z5SbE9SKmm27BxRaQSobYHEWgK6Uo7KA/edit?usp=sharing'
+    dr_panorama_wide_surveyed <- dr_panorama_wide_df %>%
+      select(local_id,cds,timestamp_utc)
 
+    # print(head(dr_panorama_wide_surveyed))
 
-    range_write(fusd_sheet,fusd_surveyed,col_names = FALSE,range = "a2")
+    dr_panorama_wide_sheet <- paste0('https://docs.google.com/spreadsheets/d/', staticValues$raw_results_sheet[[district]], '/edit?usp=sharing')
+
+    range_write(dr_panorama_wide_sheet,dr_panorama_wide_surveyed,col_names = FALSE,range = "a2")
 
     ################################################################################
 
