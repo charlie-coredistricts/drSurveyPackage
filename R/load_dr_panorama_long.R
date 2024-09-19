@@ -24,14 +24,20 @@ cleanPanoramaLong <- function(dr_panorama_long_df) {
   # print("only results within window:")
   # print(dr_panorama_long_df)
 
-  format_pano <- function(dr_panorama_long_df){
-    dr_panorama_long_df <- dr_panorama_long_df %>%
-      mutate(converted_date = as.POSIXct(submission_time, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")) %>%
+  format_pano <- function(df){
+    head(df)
+    df <- df %>%
+      mutate(converted_date = format(as.POSIXct(timestamp_utc, format="%Y-%m-%dT%H:%M:%OS", tz="UTC"), "%Y-%m-%d %H:%M:%S")) %>%
       filter(converted_date >= staticValues$survey_window$start)
 
-    dr_panorama_long_df$questions <- lapply(dr_panorama_long_df$question_order,formatQuestions)
-    dr_panorama_long_df$select_one_score[is.na(dr_panorama_long_df$select_one_score)] <- ""
-    dr_panorama_long_df$values <- paste(dr_panorama_long_df$free_response_text,na.omit(dr_panorama_long_df$select_one_score),sep = "")
+    # dr_panorama_long_df <- dr_panorama_long_df %>%
+    #   mutate(converted_date = gsubfn('.',list('T' = ' ', 'Z' = ''), submission_time),
+    #          converted_date = substr(converted_date,1,nchar(converted_date,4)))
+    #   filter(converted_date >= staticValues$survey_window$start)
+
+    df$questions <- lapply(df$question_order,formatQuestions)
+    df$select_one_score[is.na(df$select_one_score)] <- ""
+    df$values <- paste(df$free_response_text,na.omit(df$select_one_score),sep = "")
 
     # pano_student_answered <- dr_panorama_long_df %>%
     #   filter(select_one_score != "") %>%
@@ -40,18 +46,18 @@ cleanPanoramaLong <- function(dr_panorama_long_df) {
 
     # print(pano_student_answered)
 
-    pano_wide_data <- dr_panorama_long_df %>%
-      select(respondent_sis_id_value, response_language, school_names, district_name, converted_date, questions, values) %>%
-      group_by(respondent_sis_id_value) %>%
+    pano_wide_data <- df %>%
+      select(local_id, response_language, cds, district_name, converted_date, questions, values) %>%
+      group_by(local_id) %>%
       filter(converted_date == max(converted_date)) %>%
       ungroup() %>%
       pivot_wider(names_from = questions,values_from = values) %>%
-      distinct(respondent_sis_id_value, .keep_all = TRUE) %>%
+      distinct(local_id, .keep_all = TRUE) %>%
       rename(fr1 = fr22,
              fr2 = fr23,
              fr3 = fr24) %>%
-      mutate(school_names = gsubfn('.',list('"' = '', '[' = '', ']' = ''), school_names),
-             school_names = str_remove_all(school_names, " School")) %>%
+      mutate(cds = gsubfn('.',list('"' = '', '[' = '', ']' = ''), cds),
+             cds = str_remove_all(cds, " School")) %>%
       mutate(district_name = str_remove_all(district_name, " School District"))
 
     # print("pivot wide:")
@@ -83,14 +89,13 @@ cleanPanoramaLong <- function(dr_panorama_long_df) {
   dr_panorama_long_formatted$response_language_clean <- NULL
 
   # merge cds
-  cds_xwalk <- read_xlsx("./crosswalk/cds_xwalk.xlsx")
+  # cds_xwalk <- read_xlsx("./crosswalk/cds_xwalk.xlsx")
 
   dr_panorama_long_formatted <- dr_panorama_long_formatted %>%
-    left_join(cds_xwalk, join_by(school_names == School, district_name == District)) %>%
-    select(-c(district_name, school_names)) %>%
-    rename(cds = CDSCode,
-           local_id = respondent_sis_id_value,
-           timestamp_utc = converted_date) %>%
+    # left_join(cds_xwalk, join_by(cds == School, district_name == District)) %>%
+    # select(-c(district_name, cds)) %>%
+    select(-district_name) %>%
+    rename(timestamp_utc = converted_date) %>%
     mutate(student_email = NA)
 
   return(dr_panorama_long_formatted)

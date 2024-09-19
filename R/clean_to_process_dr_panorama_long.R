@@ -1,4 +1,6 @@
 clean_to_process_dr_panorama_long <- function(district,period,raw_file_xwalk) {
+  # writeLines("\n Calling DR Panorama Long - clean_to_process")
+
   # print(raw_file_xwalk$CORE_Value)
   if(staticValues$clean_files$dr_panorama_long_survey %in% raw_file_xwalk$CORE_Value){
 
@@ -14,14 +16,14 @@ clean_to_process_dr_panorama_long <- function(district,period,raw_file_xwalk) {
     # print(dr_panorama_long_df)
 
     ################ TO DO: clean 06_roster_panorama to work here ################
-    dr_panorama_long_formatted <- cleanPanoramaLong(dr_panorama_long_df)
+  dr_panorama_long_formatted <- cleanPanoramaLong(dr_panorama_long_df)
 
-    dr_panorama_long_surveyed <- dr_panorama_long_formatted %>%
-      select(local_id,cds,timestamp_utc)
+  dr_panorama_long_surveyed <- dr_panorama_long_formatted %>%
+    select(local_id,cds,timestamp_utc)
 
-    dr_panorama_long_sheet <- paste0('https://docs.google.com/spreadsheets/d/', staticValues$raw_results_sheet[[district]], '/edit?usp=sharing')
+  dr_panorama_long_sheet <- paste0('https://docs.google.com/spreadsheets/d/', staticValues$raw_results_sheet[[district]], '/edit?usp=sharing')
 
-    range_write(dr_panorama_long_sheet,dr_panorama_long_surveyed,col_names = FALSE,range = "a2")
+  range_write(dr_panorama_long_sheet,dr_panorama_long_surveyed,col_names = FALSE,range = "a2")
 
     # lbusd_surveyed <- pano_all %>%
     #   filter(district_name == "Long Beach Unified") %>%
@@ -43,13 +45,13 @@ clean_to_process_dr_panorama_long <- function(district,period,raw_file_xwalk) {
 
     ################################################################################
 
-    dr_panorama_long_df_process_path <- universal_file_path_helper(
-      district = district,
-      period = period,
-      location = staticValues$locations$egnyte_process,
+  dr_panorama_long_df_process_path <- universal_file_path_helper(
+    district = district,
+    period = period,
+    location = staticValues$locations$egnyte_process,
      ### TO DO across all clean_to_process
-      file = staticValues$data_elements$dr_survey # data_elements instead of clean_files; dr_survey should be the only clean_files name
-   )
+    file = staticValues$data_elements$dr_survey # data_elements instead of clean_files; dr_survey should be the only clean_files name
+  )
     # print(dr_panorama_long_df_process_path)
     # final path that goes to the process folder - the idea is that for the QC to work, the final file isn't specific to a survey format
     # final survey df output that in every data source/district/school needs to look the same
