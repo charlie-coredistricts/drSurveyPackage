@@ -116,6 +116,12 @@ cleanGoogle <- function(google_sheet_read) {
     select(-c(District, School.Name)) %>%
     rename(cds = CDSCode)
 
+  # SAUSD fix - identical School Name showed up for multiple districts, leading to duplicate rows when joined
+  # pivoted <- pivoted %>%
+  #   left_join(cds_xwalk, join_by(School.Name == School, District.Name == District)) %>%
+  #   select(-c(District.Name, School.Name)) %>%
+  #   rename(cds = CDSCode)
+
   # google uses email as the merge identifier
   # pivoted$merge_identifier = pivoted$Email.Address
   # pivoted$n <- pivoted$n - (as.numeric(!is.na(pivoted$FR21)) + as.numeric(!is.na(pivoted$FR22)) + as.numeric(!is.na(pivoted$FR23)) + as.numeric(!is.na(pivoted$FR24)))
