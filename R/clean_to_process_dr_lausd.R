@@ -14,6 +14,9 @@ clean_to_process_dr_lausd <- function(district,period,raw_file_xwalk) {
     # print(dr_lausd_df)
     dr_lausd_df <- dr_lausd_df %>%
       filter(response != 0) %>%
+      mutate(student_email = NA,
+             timestamp_utc = NA,
+             response_language = NA) %>%
       select(-response)
 
     # recode Yes/No
